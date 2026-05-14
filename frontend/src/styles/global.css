@@ -1,0 +1,72 @@
+/* ============================= */
+/* Global Reset */
+/* ============================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #f5f7fb;
+  color: #0f172a;
+  overflow-x: hidden;
+}
+
+/* ============================= */
+/* Buttons & Links */
+/* ============================= */
+
+button {
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+}
+
+/* ============================= */
+/* Developer Background Animations */
+/* ============================= */
+
+@keyframes moveBlobOne {
+  0% {
+    transform: translate(0px, 0px);
+  }
+  100% {
+    transform: translate(80px, 60px);
+  }
+}
+
+@keyframes moveBlobTwo {
+  0% {
+    transform: translate(0px, 0px);
+  }
+  100% {
+    transform: translate(-70px, -90px);
+  }
+}
+
+/* Optional subtle pulse effect */
+@keyframes glowPulse {
+  0% {
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(56, 189, 248, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+  }
+}
