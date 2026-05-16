@@ -96,45 +96,34 @@ PlacementAI System
                 )
 
         # ==================================================
-        # 🚀 TEMPORARY EMAIL DISABLED
+        # 🚀 SEND EMAIL SAFELY
         # ==================================================
-        # Prevent Render SMTP worker crash
-        # Backend will stay stable
-        # Contact form will still work
-        # ==================================================
+        try:
 
-        print(
-            "✅ Feedback API Hit Successfully"
-        )
-
-        print(
-            "👤 Name:",
-            name
-        )
-
-        print(
-            "📧 Email:",
-            email
-        )
-
-        print(
-            "📝 Message:",
-            message
-        )
-
-        if file:
+            mail.send(msg)
 
             print(
-                "📎 Uploaded File:",
-                file.filename
+                "✅ Email Sent Successfully"
             )
 
+        except Exception as mail_error:
+
+            print(
+                "❌ Mail Error:",
+                str(mail_error)
+            )
+
+            return jsonify({
+                "success": False,
+                "error": "Failed to send email"
+            }), 500
+
         # ==================================================
-        # ✅ ALWAYS RETURN SUCCESS
+        # ✅ SUCCESS RESPONSE
         # ==================================================
         return jsonify({
             "success": True,
-            "message": "Feedback submitted successfully"
+            "message": "Feedback sent successfully"
         }), 200
 
     except Exception as e:
@@ -153,4 +142,4 @@ PlacementAI System
 # ==================================================
 # 🔥 FORCE RENDER REDEPLOY
 # ==================================================
-# FORCE_RENDER_DEPLOY_2026_FINAL
+# FORCE_RENDER_DEPLOY_2026_MAIL_ENABLED
