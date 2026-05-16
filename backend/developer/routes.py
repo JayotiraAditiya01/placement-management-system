@@ -96,34 +96,22 @@ PlacementAI System
                 )
 
         # ==================================================
-        # 🚀 SEND EMAIL SAFELY
+        # 🚀 LOG FEEDBACK IN RENDER
         # ==================================================
-        try:
+        print("✅ Feedback API Hit Successfully")
+        print("👤 Name:", name)
+        print("📧 Email:", email)
+        print("📝 Message:", message)
 
-            mail.send(msg)
-
-            print(
-                "✅ Email Sent Successfully"
-            )
-
-        except Exception as mail_error:
-
-            print(
-                "❌ Mail Error:",
-                str(mail_error)
-            )
-
-            return jsonify({
-                "success": False,
-                "error": "Failed to send email"
-            }), 500
+        if file:
+            print("📎 Uploaded File:", file.filename)
 
         # ==================================================
         # ✅ SUCCESS RESPONSE
         # ==================================================
         return jsonify({
             "success": True,
-            "message": "Feedback sent successfully"
+            "message": "Feedback submitted successfully"
         }), 200
 
     except Exception as e:
@@ -137,9 +125,3 @@ PlacementAI System
             "success": False,
             "error": str(e)
         }), 500
-
-
-# ==================================================
-# 🔥 FORCE RENDER REDEPLOY
-# ==================================================
-# FORCE_RENDER_DEPLOY_2026_GMAIL_FINAL
