@@ -96,46 +96,34 @@ PlacementAI System
                 )
 
         # ==================================================
-        # 🚀 TEMPORARY SMTP DISABLED
+        # 🚀 SEND EMAIL SAFELY
         # ==================================================
-        # Gmail SMTP is timing out on Render
-        # Prevent backend worker crash
-        # API will stay stable
-        # File uploads will still work
-        # ==================================================
+        try:
 
-        print(
-            "✅ Feedback API Hit Successfully"
-        )
-
-        print(
-            "👤 Name:",
-            name
-        )
-
-        print(
-            "📧 Email:",
-            email
-        )
-
-        print(
-            "📝 Message:",
-            message
-        )
-
-        if file:
+            mail.send(msg)
 
             print(
-                "📎 Uploaded File:",
-                file.filename
+                "✅ Email Sent Successfully"
             )
+
+        except Exception as mail_error:
+
+            print(
+                "❌ Mail Error:",
+                str(mail_error)
+            )
+
+            return jsonify({
+                "success": False,
+                "error": "Failed to send email"
+            }), 500
 
         # ==================================================
         # ✅ SUCCESS RESPONSE
         # ==================================================
         return jsonify({
             "success": True,
-            "message": "Feedback submitted successfully"
+            "message": "Feedback sent successfully"
         }), 200
 
     except Exception as e:
@@ -154,4 +142,4 @@ PlacementAI System
 # ==================================================
 # 🔥 FORCE RENDER REDEPLOY
 # ==================================================
-# FORCE_RENDER_DEPLOY_2026_STABLE_FINAL
+# FORCE_RENDER_DEPLOY_2026_GMAIL_FINAL
