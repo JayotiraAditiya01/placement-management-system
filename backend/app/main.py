@@ -55,7 +55,7 @@ def create_app():
 
     DB_PASSWORD = os.getenv(
         "DB_PASSWORD",
-        "Adii2003"
+        "postgres"
     )
 
     DB_HOST = os.getenv(
@@ -102,34 +102,46 @@ def create_app():
     # ==================================================
     app.config["JWT_SECRET_KEY"] = os.getenv(
         "JWT_SECRET_KEY",
-        "CHANGE_THIS_IN_PRODUCTION"
+        "placement_ai_super_secure_jwt_secret_2026"
     )
 
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = 3600
 
     # ==================================================
-    # 📧 MAIL CONFIG
+    # 📧 MAIL CONFIG (FIXED)
     # ==================================================
-    app.config["MAIL_SERVER"] = "smtp.gmail.com"
+    app.config["MAIL_SERVER"] = os.getenv(
+        "MAIL_SERVER",
+        "smtp.gmail.com"
+    )
 
-    app.config["MAIL_PORT"] = 587
+    app.config["MAIL_PORT"] = int(
+        os.getenv("MAIL_PORT", 587)
+    )
 
-    app.config["MAIL_USE_TLS"] = True
+    app.config["MAIL_USE_TLS"] = (
+        os.getenv("MAIL_USE_TLS", "true").lower() == "true"
+    )
+
+    app.config["MAIL_USE_SSL"] = False
 
     app.config["MAIL_USERNAME"] = os.getenv(
-        "MAIL_USERNAME",
-        "j.aditiya01@gmail.com"
+        "MAIL_USERNAME"
     )
 
     app.config["MAIL_PASSWORD"] = os.getenv(
-        "MAIL_PASSWORD",
-        "htgqqtcxhzghexir"
+        "MAIL_PASSWORD"
     )
 
     app.config["MAIL_DEFAULT_SENDER"] = os.getenv(
-        "MAIL_USERNAME",
-        "j.aditiya01@gmail.com"
+        "MAIL_USERNAME"
     )
+
+    app.config["MAIL_SUPPRESS_SEND"] = False
+
+    app.config["MAIL_ASCII_ATTACHMENTS"] = False
+
+    app.config["MAIL_TIMEOUT"] = 30
 
     # ==================================================
     # 📎 FILE UPLOAD LIMIT
