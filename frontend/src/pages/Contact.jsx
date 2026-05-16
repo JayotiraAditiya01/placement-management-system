@@ -4,22 +4,28 @@ import API_BASE_URL from "../config/api";
 
 const Contact = () => {
 
-  // ✅ STATE
+  /* ================= STATE ================= */
+
   const [loading, setLoading] = useState(false);
 
-  // ✅ BACKEND URL
-  const API_BASE = API_BASE_URL;
+  /* ================= HANDLER ================= */
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
-    const name = e.target.name.value;
-    const email = e.target.email.value;
-    const message = e.target.message.value;
-    const file = e.target.file.files[0];
+    setLoading(true);
 
     try {
-      setLoading(true);
+
+      const form = e.target;
+
+      const name = form.name.value;
+      const email = form.email.value;
+      const message = form.message.value;
+      const file = form.file.files[0];
+
+      /* ================= FORM DATA ================= */
 
       const formData = new FormData();
 
@@ -31,70 +37,108 @@ const Contact = () => {
         formData.append("file", file);
       }
 
-      const res = await fetch(`${API_BASE}/api/send-feedback`, {
-        method: "POST",
-        body: formData
-      });
+      /* ================= FETCH ================= */
 
-      let data;
+      const response = await fetch(
+        `${API_BASE_URL}/api/send-feedback`,
+        {
+          method: "POST",
+          body: formData
+        }
+      );
+
+      let data = {};
 
       try {
-        data = await res.json();
+
+        data = await response.json();
+
       } catch {
-        throw new Error("Invalid server response");
+
+        data = {
+          error: "Invalid server response"
+        };
+
       }
 
-      if (res.ok && data.success) {
-
-        alert("✅ Message sent successfully!");
-
-        e.target.reset();
-
-      } else {
+      if (!response.ok) {
 
         throw new Error(
-          data.error || "Failed to send message"
+          data.error ||
+          data.message ||
+          "Failed to send feedback"
         );
+
       }
+
+      alert("✅ Message sent successfully!");
+
+      form.reset();
 
     } catch (error) {
 
-      alert("❌ " + error.message);
+      console.error(
+        "Feedback Error:",
+        error
+      );
+
+      alert(
+        `❌ ${error.message}`
+      );
 
     } finally {
 
       setLoading(false);
+
     }
   };
 
   return (
+
     <div style={page}>
 
-      {/* Heading */}
+      {/* ================= HEADING ================= */}
+
       <motion.h1
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{
+          opacity: 0,
+          y: -20
+        }}
+        animate={{
+          opacity: 1,
+          y: 0
+        }}
         style={heading}
       >
         Contact Us
       </motion.h1>
 
       <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
+        initial={{
+          opacity: 0
+        }}
+        animate={{
+          opacity: 1
+        }}
+        transition={{
+          delay: 0.2
+        }}
         style={subHeading}
       >
         Feedback, bugs, or collaboration — feel free to reach out.
       </motion.p>
 
-      {/* MAIN GRID */}
+      {/* ================= MAIN GRID ================= */}
+
       <div style={grid}>
 
-        {/* PROJECT LEAD */}
+        {/* ================= PROJECT LEAD ================= */}
+
         <motion.div
           style={highlightCard}
-          whileHover={{ scale: 1.03 }}
+          whileHover={{
+            scale: 1.03
+          }}
         >
 
           <h3 style={highlightTitle}>
@@ -141,21 +185,42 @@ const Contact = () => {
             👑 Founder & Lead Full Stack Developer
           </div>
 
-          {/* 🔥 TECH STACK */}
+          {/* ================= TECH STACK ================= */}
+
           <div style={techStack}>
-            <span style={techItem}>⚛️ React</span>
-            <span style={techItem}>🐍 Flask</span>
-            <span style={techItem}>🐘 PostgreSQL</span>
-            <span style={techItem}>🧠 ML</span>
+
+            <span style={techItem}>
+              ⚛️ React
+            </span>
+
+            <span style={techItem}>
+              🐍 Flask
+            </span>
+
+            <span style={techItem}>
+              🐘 PostgreSQL
+            </span>
+
+            <span style={techItem}>
+              🧠 ML
+            </span>
+
           </div>
 
         </motion.div>
 
-        {/* FORM */}
+        {/* ================= CONTACT FORM ================= */}
+
         <motion.div
           style={card}
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{
+            opacity: 0,
+            x: 40
+          }}
+          animate={{
+            opacity: 1,
+            x: 0
+          }}
         >
 
           <h3 style={cardTitle}>
@@ -193,28 +258,40 @@ const Contact = () => {
             />
 
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{
+                scale: 1.05
+              }}
+              whileTap={{
+                scale: 0.95
+              }}
+              disabled={loading}
               style={{
                 ...button,
                 opacity: loading ? 0.7 : 1
               }}
-              disabled={loading}
             >
+
               {loading
                 ? "Sending..."
                 : "Send Message"}
+
             </motion.button>
 
           </form>
 
         </motion.div>
+
       </div>
 
-      {/* CONTRIBUTORS */}
+      {/* ================= CONTRIBUTORS ================= */}
+
       <motion.h2
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        initial={{
+          opacity: 0
+        }}
+        animate={{
+          opacity: 1
+        }}
         style={contributorsTitle}
       >
         🤝 Contributors
@@ -222,10 +299,13 @@ const Contact = () => {
 
       <div style={contributorsGrid}>
 
-        {/* Jashan */}
+        {/* JASHAN */}
+
         <motion.div
           style={highlightCard}
-          whileHover={{ scale: 1.03 }}
+          whileHover={{
+            scale: 1.03
+          }}
         >
 
           <h3 style={highlightTitle}>
@@ -255,10 +335,13 @@ const Contact = () => {
 
         </motion.div>
 
-        {/* Keshav */}
+        {/* KESHAV */}
+
         <motion.div
           style={highlightCard}
-          whileHover={{ scale: 1.03 }}
+          whileHover={{
+            scale: 1.03
+          }}
         >
 
           <h3 style={highlightTitle}>
@@ -288,10 +371,13 @@ const Contact = () => {
 
         </motion.div>
 
-        {/* Arjotbir */}
+        {/* ARJOTBIR */}
+
         <motion.div
           style={highlightCard}
-          whileHover={{ scale: 1.03 }}
+          whileHover={{
+            scale: 1.03
+          }}
         >
 
           <h3 style={highlightTitle}>
@@ -323,10 +409,15 @@ const Contact = () => {
 
       </div>
 
-      {/* THANK YOU */}
+      {/* ================= THANK YOU ================= */}
+
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        initial={{
+          opacity: 0
+        }}
+        animate={{
+          opacity: 1
+        }}
         style={thankYou}
       >
         ❤️ Thank you for helping improve this project.
@@ -337,9 +428,12 @@ const Contact = () => {
   );
 };
 
-/* COMPONENT */
+/* ================= DETAIL COMPONENT ================= */
+
 const Detail = ({ label, value }) => (
+
   <div style={detailRow}>
+
     <span style={detailLabel}>
       {label}
     </span>
@@ -347,77 +441,83 @@ const Detail = ({ label, value }) => (
     <span style={detailValue}>
       {value}
     </span>
+
   </div>
+
 );
 
-/* STYLES */
+/* ================= STYLES ================= */
 
 const page = {
   minHeight: "100vh",
   padding: "40px 60px",
-  background: "linear-gradient(135deg, #eef2ff, #f8fafc)",
+  background:
+    "linear-gradient(135deg, #eef2ff, #f8fafc)"
 };
 
 const heading = {
   fontSize: "38px",
   fontWeight: 800,
-  textAlign: "center",
+  textAlign: "center"
 };
 
 const subHeading = {
   textAlign: "center",
   color: "#6b7280",
-  marginBottom: "40px",
+  marginBottom: "40px"
 };
 
 const grid = {
   display: "grid",
   gridTemplateColumns: "1.2fr 1.8fr",
-  gap: "30px",
+  gap: "30px"
 };
 
 const highlightCard = {
-  background: "linear-gradient(160deg, #4f46e5, #6366f1)",
+  background:
+    "linear-gradient(160deg, #4f46e5, #6366f1)",
   color: "#ffffff",
   padding: "28px",
   borderRadius: "22px",
-  boxShadow: "0 25px 60px rgba(79,70,229,0.35)",
-  transition: "0.3s",
+  boxShadow:
+    "0 25px 60px rgba(79,70,229,0.35)",
+  transition: "0.3s"
 };
 
 const highlightTitle = {
   fontWeight: 800,
   fontSize: "18px",
-  marginBottom: "16px",
+  marginBottom: "16px"
 };
 
 const detailRow = {
   display: "flex",
   justifyContent: "space-between",
-  marginBottom: "12px",
+  marginBottom: "12px"
 };
 
 const detailLabel = {
-  fontWeight: 600,
+  fontWeight: 600
 };
 
 const detailValue = {
-  fontWeight: 500,
+  fontWeight: 500
 };
 
 const link = {
   color: "#ffffff",
   textDecoration: "underline",
-  fontWeight: "600",
+  fontWeight: "600"
 };
 
 const badge = {
   marginTop: "20px",
   padding: "10px 12px",
-  background: "rgba(255,255,255,0.15)",
+  background:
+    "rgba(255,255,255,0.15)",
   borderRadius: "12px",
   textAlign: "center",
-  fontWeight: 600,
+  fontWeight: 600
 };
 
 const techStack = {
@@ -429,7 +529,8 @@ const techStack = {
 };
 
 const techItem = {
-  background: "rgba(255,255,255,0.2)",
+  background:
+    "rgba(255,255,255,0.2)",
   padding: "6px 10px",
   borderRadius: "10px",
   fontSize: "13px",
@@ -440,12 +541,13 @@ const card = {
   background: "#ffffff",
   padding: "30px",
   borderRadius: "20px",
-  boxShadow: "0 20px 45px rgba(0,0,0,0.08)",
+  boxShadow:
+    "0 20px 45px rgba(0,0,0,0.08)"
 };
 
 const cardTitle = {
   fontWeight: 700,
-  marginBottom: "18px",
+  marginBottom: "18px"
 };
 
 const input = {
@@ -453,7 +555,7 @@ const input = {
   padding: "12px",
   marginBottom: "14px",
   borderRadius: "12px",
-  border: "1px solid #e5e7eb",
+  border: "1px solid #e5e7eb"
 };
 
 const textarea = {
@@ -462,7 +564,7 @@ const textarea = {
   height: "120px",
   marginBottom: "14px",
   borderRadius: "12px",
-  border: "1px solid #e5e7eb",
+  border: "1px solid #e5e7eb"
 };
 
 const button = {
@@ -473,28 +575,29 @@ const button = {
   color: "#ffffff",
   fontWeight: 600,
   border: "none",
-  cursor: "pointer",
+  cursor: "pointer"
 };
 
 const contributorsTitle = {
   marginTop: "50px",
   textAlign: "center",
   fontSize: "22px",
-  fontWeight: "700",
+  fontWeight: "700"
 };
 
 const contributorsGrid = {
   marginTop: "20px",
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-  gap: "20px",
+  gridTemplateColumns:
+    "repeat(auto-fit, minmax(280px, 1fr))",
+  gap: "20px"
 };
 
 const thankYou = {
   marginTop: "50px",
   textAlign: "center",
   fontSize: "16px",
-  color: "#374151",
+  color: "#374151"
 };
 
 export default Contact;
