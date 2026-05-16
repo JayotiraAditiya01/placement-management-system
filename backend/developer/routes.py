@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 import resend
 import os
+import base64
 
 # ==================================================
 # 🔥 RESEND API KEY
@@ -49,8 +50,10 @@ def send_feedback():
     try:
 
         # ==================================================
-        # 📎 FILE INFO
+        # 📎 ATTACHMENT PREPARATION
         # ==================================================
+        attachments = []
+
         attachment_name = None
 
         if file:
@@ -59,8 +62,21 @@ def send_feedback():
 
                 attachment_name = file.filename
 
+                file_data = file.read()
+
+                encoded_file = base64.b64encode(
+                    file_data
+                ).decode("utf-8")
+
+                attachments.append({
+
+                    "filename": file.filename,
+
+                    "content": encoded_file
+                })
+
                 print(
-                    "📎 File Attached Successfully"
+                    "📎 File Prepared Successfully"
                 )
 
             except Exception as attachment_error:
@@ -116,7 +132,9 @@ def send_feedback():
                     </p>
 
                 </div>
-            """
+            """,
+
+            "attachments": attachments
         })
 
         print(
@@ -147,4 +165,4 @@ def send_feedback():
 # ==================================================
 # 🔥 FORCE RENDER REDEPLOY
 # ==================================================
-# FORCE_RENDER_DEPLOY_2026_RESEND_FINAL
+# FORCE_RENDER_DEPLOY_2026_ATTACHMENT_FINAL
