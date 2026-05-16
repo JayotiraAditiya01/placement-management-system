@@ -84,6 +84,10 @@ PlacementAI System
                     data=file.read()
                 )
 
+                print(
+                    "📎 File Attached Successfully"
+                )
+
             except Exception as attachment_error:
 
                 print(
@@ -92,27 +96,38 @@ PlacementAI System
                 )
 
         # ==================================================
-        # 🚀 SAFE MAIL SENDING
+        # 🚀 TEMPORARY EMAIL DISABLED
         # ==================================================
-        try:
+        # Prevent Render SMTP worker crash
+        # Backend will stay stable
+        # Contact form will still work
+        # ==================================================
 
-            mail.send(msg)
+        print(
+            "✅ Feedback API Hit Successfully"
+        )
+
+        print(
+            "👤 Name:",
+            name
+        )
+
+        print(
+            "📧 Email:",
+            email
+        )
+
+        print(
+            "📝 Message:",
+            message
+        )
+
+        if file:
 
             print(
-                "✅ Email Sent Successfully"
+                "📎 Uploaded File:",
+                file.filename
             )
-
-        except Exception as mail_error:
-
-            print(
-                "❌ Mail Error:",
-                str(mail_error)
-            )
-
-            # ==================================================
-            # ⚠ NEVER CRASH BACKEND
-            # ==================================================
-            pass
 
         # ==================================================
         # ✅ ALWAYS RETURN SUCCESS
@@ -138,4 +153,4 @@ PlacementAI System
 # ==================================================
 # 🔥 FORCE RENDER REDEPLOY
 # ==================================================
-# FORCE_RENDER_DEPLOY_2026
+# FORCE_RENDER_DEPLOY_2026_FINAL
