@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_mail import Message
-from app.extensions import mail   # ✅ FIXED (NO circular import)
+from app.extensions import mail
 
 # ==================================================
 # 🔥 BLUEPRINT
@@ -72,17 +72,24 @@ PlacementAI System
         )
 
         # ==================================================
-        # 📎 ATTACH FILE (IF EXISTS)
+        # 📎 ATTACH FILE
         # ==================================================
         if file:
 
-            msg.attach(
-                filename=file.filename,
+            try:
 
-                content_type=file.content_type,
+                msg.attach(
+                    filename=file.filename,
+                    content_type=file.content_type,
+                    data=file.read()
+                )
 
-                data=file.read()
-            )
+            except Exception as attachment_error:
+
+                print(
+                    "❌ Attachment Error:",
+                    str(attachment_error)
+                )
 
         # ==================================================
         # 🚀 SAFE MAIL SENDING
@@ -103,11 +110,7 @@ PlacementAI System
             )
 
             # ==================================================
-            # ⚠ PREVENT RENDER WORKER CRASH
-            # ==================================================
-            # DO NOT RAISE ERROR
-            # DO NOT RETURN FAILURE
-            # KEEP API ALIVE
+            # ⚠ NEVER CRASH BACKEND
             # ==================================================
             pass
 
@@ -130,3 +133,9 @@ PlacementAI System
             "success": False,
             "error": str(e)
         }), 500
+
+
+# ==================================================
+# 🔥 FORCE RENDER REDEPLOY
+# ==================================================
+# FORCE_RENDER_DEPLOY_2026
