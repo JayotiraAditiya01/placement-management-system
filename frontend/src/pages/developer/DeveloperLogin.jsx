@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
+/* ✅ API IMPORT */
+import API_BASE_URL from "../../config/api";
+
 const DeveloperLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -12,49 +15,82 @@ const DeveloperLogin = () => {
 
   /* ================= LOGIN HANDLER ================= */
   const handleLogin = async (e) => {
-    e.preventDefault(); // 🔥 PREVENT REFRESH
+    e.preventDefault();
+
     setError("");
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/developer-login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ email, password })
-      });
+
+      /* ✅ PRODUCTION SAFE API */
+      const response = await fetch(
+        `${API_BASE_URL}/api/auth/developer-login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            email,
+            password
+          })
+        }
+      );
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || data.message || "Login failed");
+
+        setError(
+          data.error ||
+          data.message ||
+          "Login failed"
+        );
+
         setLoading(false);
         return;
       }
 
-      /* 🔥 CLEAR OLD SESSION */
+      /* ✅ CLEAR OLD SESSION */
       localStorage.clear();
 
-      /* ✅ STORE TOKEN (CRITICAL FIX) */
-      localStorage.setItem("access_token", data.access_token);
-      localStorage.setItem("role", data.role); // must match backend
-      localStorage.setItem("email", data.email || email);
+      /* ✅ STORE AUTH DATA */
+      localStorage.setItem(
+        "access_token",
+        data.access_token
+      );
+
+      localStorage.setItem(
+        "role",
+        data.role
+      );
+
+      localStorage.setItem(
+        "email",
+        data.email || email
+      );
 
       /* ✅ NAVIGATE */
       navigate("/developer/dashboard");
 
     } catch (err) {
-      console.error(err);
-      setError("Server not reachable");
+
+      console.error("Developer Login Error:", err);
+
+      setError(
+        "Server not reachable"
+      );
+
     } finally {
+
       setLoading(false);
+
     }
   };
 
   return (
     <div style={container}>
-      
+
       {/* BACKGROUND EFFECTS */}
       <div style={gradientOverlay}></div>
       <div style={blobOne}></div>
@@ -64,19 +100,33 @@ const DeveloperLogin = () => {
       <motion.div
         initial={{ opacity: 0, y: 80 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, type: "spring" }}
+        transition={{
+          duration: 0.7,
+          type: "spring"
+        }}
         style={card}
       >
-        <h2 style={title}>💻 Developer Access</h2>
-        <p style={subtitle}>Secure AI Control Panel Login</p>
 
-        <form onSubmit={handleLogin} style={{ width: "100%" }}>
+        <h2 style={title}>
+          💻 Developer Access
+        </h2>
+
+        <p style={subtitle}>
+          Secure AI Control Panel Login
+        </p>
+
+        <form
+          onSubmit={handleLogin}
+          style={{ width: "100%" }}
+        >
 
           <input
             type="email"
             placeholder="Developer Email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
             required
             style={input}
           />
@@ -85,16 +135,26 @@ const DeveloperLogin = () => {
             type="password"
             placeholder="Password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
             required
             style={input}
           />
 
-          {error && <p style={errorText}>{error}</p>}
+          {error && (
+            <p style={errorText}>
+              {error}
+            </p>
+          )}
 
           <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{
+              scale: 1.05
+            }}
+            whileTap={{
+              scale: 0.95
+            }}
             type="submit"
             disabled={loading}
             style={{
@@ -102,11 +162,17 @@ const DeveloperLogin = () => {
               opacity: loading ? 0.7 : 1
             }}
           >
-            {loading ? "Logging in..." : "Login"}
+
+            {loading
+              ? "Logging in..."
+              : "Login"}
+
           </motion.button>
 
         </form>
+
       </motion.div>
+
     </div>
   );
 };
@@ -122,7 +188,8 @@ const container = {
   alignItems: "center",
   position: "relative",
   overflow: "hidden",
-  background: "linear-gradient(135deg, #0f172a, #1e293b)"
+  background:
+    "linear-gradient(135deg, #0f172a, #1e293b)"
 };
 
 const gradientOverlay = {
@@ -140,12 +207,14 @@ const card = {
   borderRadius: "22px",
   background: "rgba(255,255,255,0.06)",
   backdropFilter: "blur(25px)",
-  boxShadow: "0 25px 80px rgba(0,0,0,0.6)",
+  boxShadow:
+    "0 25px 80px rgba(0,0,0,0.6)",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   zIndex: 2,
-  border: "1px solid rgba(255,255,255,0.1)"
+  border:
+    "1px solid rgba(255,255,255,0.1)"
 };
 
 const title = {
@@ -166,8 +235,10 @@ const input = {
   padding: "14px 16px",
   marginBottom: "20px",
   borderRadius: "14px",
-  border: "1px solid rgba(255,255,255,0.1)",
-  background: "rgba(255,255,255,0.08)",
+  border:
+    "1px solid rgba(255,255,255,0.1)",
+  background:
+    "rgba(255,255,255,0.08)",
   color: "#ffffff",
   outline: "none",
   fontSize: "14px"
@@ -178,12 +249,14 @@ const button = {
   padding: "16px",
   borderRadius: "16px",
   border: "none",
-  background: "linear-gradient(135deg, #38bdf8, #0ea5e9)",
+  background:
+    "linear-gradient(135deg, #38bdf8, #0ea5e9)",
   color: "#fff",
   fontWeight: 700,
   fontSize: "16px",
   cursor: "pointer",
-  boxShadow: "0 0 25px rgba(56, 189, 248, 0.6)"
+  boxShadow:
+    "0 0 25px rgba(56, 189, 248, 0.6)"
 };
 
 const errorText = {
