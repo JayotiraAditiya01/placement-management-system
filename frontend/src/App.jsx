@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 
 // ✅ FIXED IMPORTS (NO .jsx)
-import Home from "./pages/home";
+import Home from "./pages/Home";
 import Contact from "./pages/Contact";
 
 // Student
