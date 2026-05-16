@@ -85,7 +85,7 @@ PlacementAI System
             )
 
         # ==================================================
-        # 🚀 SEND EMAIL SAFELY
+        # 🚀 SAFE MAIL SENDING
         # ==================================================
         try:
 
@@ -103,8 +103,11 @@ PlacementAI System
             )
 
             # ==================================================
-            # ⚠ IMPORTANT
-            # DO NOT CRASH BACKEND
+            # ⚠ PREVENT RENDER WORKER CRASH
+            # ==================================================
+            # DO NOT RAISE ERROR
+            # DO NOT RETURN FAILURE
+            # KEEP API ALIVE
             # ==================================================
             pass
 
