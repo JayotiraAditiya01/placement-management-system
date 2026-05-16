@@ -54,9 +54,9 @@ def create_app():
     )
 
     DB_PASSWORD = os.getenv(
-    "DB_PASSWORD",
-    "Adii2003"
-)
+        "DB_PASSWORD",
+        "Adii2003"
+    )
 
     DB_HOST = os.getenv(
         "DB_HOST",
@@ -116,15 +116,18 @@ def create_app():
 
     app.config["MAIL_USE_TLS"] = True
 
-    app.config["MAIL_USERNAME"] = (
+    app.config["MAIL_USERNAME"] = os.getenv(
+        "MAIL_USERNAME",
         "j.aditiya01@gmail.com"
     )
 
-    app.config["MAIL_PASSWORD"] = (
+    app.config["MAIL_PASSWORD"] = os.getenv(
+        "MAIL_PASSWORD",
         "htgqqtcxhzghexir"
     )
 
-    app.config["MAIL_DEFAULT_SENDER"] = (
+    app.config["MAIL_DEFAULT_SENDER"] = os.getenv(
+        "MAIL_USERNAME",
         "j.aditiya01@gmail.com"
     )
 
@@ -154,12 +157,12 @@ def create_app():
 
     CORS(
         app,
+        supports_credentials=True,
         resources={
-            r"/api/*": {
+            r"/*": {
                 "origins": FRONTEND_URL
             }
-        },
-        supports_credentials=True
+        }
     )
 
     # ==================================================
