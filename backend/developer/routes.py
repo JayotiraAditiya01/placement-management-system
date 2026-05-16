@@ -1,6 +1,11 @@
 from flask import Blueprint, request, jsonify
-from flask_mail import Message
-from app.extensions import mail
+import resend
+import os
+
+# ==================================================
+# 🔥 RESEND API KEY
+# ==================================================
+resend.api_key = os.getenv("RESEND_API_KEY")
 
 # ==================================================
 # 🔥 BLUEPRINT
@@ -44,45 +49,15 @@ def send_feedback():
     try:
 
         # ==================================================
-        # 📧 CREATE EMAIL MESSAGE
+        # 📎 FILE INFO
         # ==================================================
-        msg = Message(
-            subject=f"🚀 New Feedback from {name}",
+        attachment_name = None
 
-            recipients=[
-                "j.aditiya01@gmail.com"
-            ],
-
-            body=f"""
-==============================
-📩 NEW FEEDBACK RECEIVED
-==============================
-
-👤 Name: {name}
-
-📧 Email: {email}
-
-📝 Message:
-{message}
-
-==============================
-PlacementAI System
-==============================
-            """
-        )
-
-        # ==================================================
-        # 📎 ATTACH FILE
-        # ==================================================
         if file:
 
             try:
 
-                msg.attach(
-                    filename=file.filename,
-                    content_type=file.content_type,
-                    data=file.read()
-                )
+                attachment_name = file.filename
 
                 print(
                     "📎 File Attached Successfully"
@@ -96,22 +71,64 @@ PlacementAI System
                 )
 
         # ==================================================
-        # 🚀 LOG FEEDBACK IN RENDER
+        # 🚀 SEND EMAIL USING RESEND
         # ==================================================
-        print("✅ Feedback API Hit Successfully")
-        print("👤 Name:", name)
-        print("📧 Email:", email)
-        print("📝 Message:", message)
+        resend.Emails.send({
 
-        if file:
-            print("📎 Uploaded File:", file.filename)
+            "from": "onboarding@resend.dev",
+
+            "to": "j.aditiya01@gmail.com",
+
+            "subject": f"🚀 New Feedback from {name}",
+
+            "html": f"""
+                <div style="font-family: Arial; padding: 20px;">
+
+                    <h2>📩 New Feedback Received</h2>
+
+                    <hr>
+
+                    <p>
+                        <b>👤 Name:</b> {name}
+                    </p>
+
+                    <p>
+                        <b>📧 Email:</b> {email}
+                    </p>
+
+                    <p>
+                        <b>📝 Message:</b>
+                    </p>
+
+                    <p>
+                        {message}
+                    </p>
+
+                    <p>
+                        <b>📎 Attachment:</b>
+                        {attachment_name if attachment_name else "No File Uploaded"}
+                    </p>
+
+                    <hr>
+
+                    <p>
+                        PlacementAI System
+                    </p>
+
+                </div>
+            """
+        })
+
+        print(
+            "✅ Email Sent Successfully Using Resend"
+        )
 
         # ==================================================
         # ✅ SUCCESS RESPONSE
         # ==================================================
         return jsonify({
             "success": True,
-            "message": "Feedback submitted successfully"
+            "message": "Feedback sent successfully"
         }), 200
 
     except Exception as e:
@@ -125,3 +142,9 @@ PlacementAI System
             "success": False,
             "error": str(e)
         }), 500
+
+
+# ==================================================
+# 🔥 FORCE RENDER REDEPLOY
+# ==================================================
+# FORCE_RENDER_DEPLOY_2026_RESEND_FINAL
